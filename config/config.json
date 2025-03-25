@@ -1,0 +1,11 @@
+{
+    "base_url": "https://demoqa.com/",
+    "browser": "Chrome",
+    "browser_options": [
+        "--incognito",
+        "--start-maximized",
+        "--lang=en-US",
+        "--disable-software-rasterizer"
+    ],
+    "waiting_time": 5
+}

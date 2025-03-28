@@ -1,5 +1,5 @@
-from browser_factory import BrowserFactory
-from singleton import Singleton
+from core.browser_factory import BrowserFactory
+from core.singleton import Singleton
 
 
 class Browser(metaclass=Singleton):

@@ -11,7 +11,6 @@ class BaseElement:
         self.name = name
 
     def find(self):
-        print(self.locator)
         return WebDriverWait(Driver().get_driver, 10).until(
             EC.presence_of_element_located(self.locator)
         )

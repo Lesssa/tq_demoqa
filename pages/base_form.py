@@ -14,3 +14,4 @@ class BaseForm(ABC):
 
     def is_displayed(self):
         return BaseElement(self.locator, self.name).is_displayed()
+

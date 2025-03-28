@@ -11,5 +11,5 @@ class MainPage(BaseForm):
     def __init__(self):
         super().__init__(self.__home_banner, "Alerts Page")
 
-    def go_to_alerts(self):
+    def go_to_alerts_window(self):
         self.__alerts_button.click()

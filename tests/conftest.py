@@ -1,11 +1,17 @@
 import pytest
 from config.config_manager import ConfigManager
+from core.driver import Driver
 
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_environment():
-    """Настраивает окружение перед тестами"""
-    ConfigManager.load_config()  # Загружаем конфиг перед тестами
+def setup_environment(request):
+    ConfigManager.load_config()
+
+    def cleanup():
+        driver = Driver()
+        driver.quit()
+
+    request.addfinalizer(cleanup)
     yield
-    # Если нужны действия после всех тестов, их можно добавить здесь
+
 

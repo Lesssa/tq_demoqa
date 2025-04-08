@@ -1,18 +1,20 @@
 from selenium.webdriver.common.by import By
 
-from config.logger import setup_logger
+from config.logger import Logger
 from elements.base_element import BaseElement
+from elements.label import Label
+from pages.base_form import BaseForm
 from pages.frame import Frame
-logger = setup_logger('FramePage')
+logger = Logger.get_logger()
 
 
-class FramePage(Frame):
+# todo after changing to baseform there's some errors
+class FramePage(BaseForm):
     __upper_frame = (By.XPATH, '//*[@id="frame1"]')
     __lower_frame = (By.XPATH, '//*[@id="frame2"]')
-    __frame_text = BaseElement((By.XPATH, '//*[@id="sampleHeading"]'), 'Frame text')
+    __frame_text = Label((By.XPATH, '//*[@id="sampleHeading"]'), 'Frame text')
 
     def __init__(self):
-        logger.info('Initiating a page with frames')
         super().__init__(self.__upper_frame, "Frames Page")
 
     def get_upper_frame_text(self):

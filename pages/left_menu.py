@@ -1,17 +1,18 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from config.config_manager import ConfigManager
-from config.logger import setup_logger
+from config.logger import Logger
 from core.driver import Driver
 from elements.button import Button
 from pages.base_form import BaseForm
 from selenium.webdriver.support import expected_conditions as EC
-logger = setup_logger('LeftMenu')
+logger = Logger.get_logger()
 
-
+# todo check classes
+# todo remove id in xpaths, leave only text
 class LeftMenu(BaseForm):
-    __left_panel = (By.XPATH, '//*[@class="left-pannel"]')
-    __alerts_button = Button((By.XPATH, '//*[@class="card mt-4 top-card" and *//text()="Alerts, Frame & Windows"]'),
+    __left_panel = (By.XPATH, '//*[contains(@class, "left-pannel")]')
+    __alerts_button = Button((By.XPATH, '//*[contains(@class, "card mt-4 top-card") and *//text()="Alerts, Frame & Windows"]'),
                              "Alerts, Frame & Windows button")
     __go_to_alerts = Button((By.XPATH, '//*[@id="item-1" and *//text()="Alerts"]'), "Left panel alerts button")
     __go_to_nested_frames = Button((By.XPATH, '//*[@id="item-3" and *//text()="Nested Frames"]'),
@@ -20,11 +21,10 @@ class LeftMenu(BaseForm):
     __go_to_web_tables = Button((By.XPATH, '//*[@id="item-3" and *//text()="Web Tables"]'), 'Left panel web tables button')
     __go_to_browser_windows = Button((By.XPATH, '//*[@id="item-0" and *//text()="Browser Windows"]'), 'Left panel browser windows button')
     __go_to_links = Button((By.XPATH, '//*[@id="item-5" and *//text()="Links"]'), 'Left panel links button')
-    __open_elements_list = Button((By.XPATH, '//*[@class="header-wrapper" and *//text()="Elements"]'), 'Elements list')
-    __elements_are_shown = (By.XPATH, '//*[@class="element-list collapse show"]')
+    __open_elements_list = Button((By.XPATH, '//*[contains(@class, "header-wrapper") and *//text()="Elements"]'), 'Elements list')
+    __elements_are_shown = (By.XPATH, '//*[contains(@class, "element-list collapse show")]')
 
     def __init__(self):
-        logger.info('Initiating left menu')
         super().__init__(self.__left_panel, 'Left Menu')
 
     def go_to_alerts_window(self):
@@ -61,6 +61,6 @@ class LeftMenu(BaseForm):
 
     def wait_shown_list(self):
         logger.info('Waiting for Elements items to be revealed')
-        return WebDriverWait(Driver().get_driver, ConfigManager.get('waiting_time')).until(
+        return WebDriverWait(Driver().driver, ConfigManager.get('waiting_time')).until(
             EC.presence_of_element_located(self.__elements_are_shown)
         )

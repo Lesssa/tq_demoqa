@@ -3,15 +3,9 @@ from config.config_manager import ConfigManager
 from core.driver import Driver
 
 
-@pytest.fixture(scope="session", autouse=True)
+# todo check if implementation is correct
+@pytest.fixture(scope="function", autouse=True)
 def setup_environment(request):
-    ConfigManager.load_config()
-
-    def cleanup():
-        driver = Driver()
-        driver.quit()
-
-    request.addfinalizer(cleanup)
+    Driver().driver.get(Driver().base_url)
     yield
-
-
+    Driver().quit()

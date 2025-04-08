@@ -1,19 +1,21 @@
 from selenium.webdriver.common.by import By
 
-from config.logger import setup_logger
+from config.logger import Logger
 from elements.base_element import BaseElement
+from elements.label import Label
 from pages.frame import Frame
-logger = setup_logger('NestedFramePage')
+logger = Logger.get_logger()
 
 
+# todo locators are not unique
+# todo parent shouldn't be frame, it's a page
 class NestedFramePage(Frame):
     __parent_frame = (By.XPATH, '//iframe[@id="frame1"]')
     __child_frame = (By.XPATH, "//iframe")
-    __parent_text = BaseElement((By.XPATH, "//body[iframe]"), 'Parent text')
-    __child_text = BaseElement((By.XPATH, "//p"), 'Child Text')
+    __parent_text = Label((By.XPATH, "//body[iframe]"), 'Parent text')
+    __child_text = Label((By.XPATH, "//p"), 'Child Text')
 
     def __init__(self):
-        logger.info('Initiating Nested frame page')
         super().__init__(self.__parent_frame, "Nested Frames Page")
 
     def get_parent_text(self):

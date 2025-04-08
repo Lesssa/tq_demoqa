@@ -18,8 +18,9 @@ def test_handles():
 
     assert browser_page.is_displayed(), "Browser page is not displayed"
     old_tabs = BrowserManager.get_old_tabs()
-    browser_page.get_new_tab_button().click()
+    browser_page.click_new_tab_button()
     BrowserManager.switch_to_tab(BrowserManager.get_new_tab_id(old_tabs))
+    # todo need to check is_displayed for opened page
     assert BrowserManager.get_current_url() == 'https://demoqa.com/sample', 'New tab URL is incorrect'
     BrowserManager.close_current_tab()
     BrowserManager.switch_to_tab(old_tabs.pop())

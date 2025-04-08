@@ -1,25 +1,19 @@
 import pytest
+
+from models.user import User
+from pages.header import Header
 from pages.left_menu import LeftMenu
 from pages.main_page import MainPage
 from pages.web_tables_page import WebTablesPage
 
 
-@pytest.mark.parametrize("user_data", [
-    {"firstName": "Jon", "lastName": "Snow", "userEmail": "knownothing@gmail.com", "age": 30, "salary": 3000, "department": "alpha"},
-    {"firstName": "Buttercup", "lastName": "Cumbersnatch", "userEmail": "BudapestCandygram@mail.ru", "age": 41, "salary": 2000, "department": "beta"}
-])
+@pytest.mark.parametrize("user_data", User.load_all())
 def test_tables(user_data):
-    column_mapping = {
-        "firstName": "First Name",
-        "lastName": "Last Name",
-        "userEmail": "Email",
-        "age": "Age",
-        "salary": "Salary",
-        "department": "Department"
-    }
     main_page = MainPage()
     left_menu = LeftMenu()
     web_tables_page = WebTablesPage()
+    header = Header()
+
     assert main_page.is_displayed(), "Main page is not displayed"
     main_page.go_to_elements()
 
@@ -30,23 +24,15 @@ def test_tables(user_data):
     web_tables_page.get_add_button().click()
     web_tables_page.wait_reg_form_displayed()
 
-    for field, value in user_data.items():
+    for field, value in user_data.dict(by_alias=True).items():
         web_tables_page.send_keys(field, str(value))
-    web_tables_page.get_submit_button().click()
-    not_empty_rows = web_tables_page.get_not_empty_rows()
-    last_row_values = web_tables_page.get_values_from_last_row()
-    column_names = web_tables_page.get_column_names()
-    row_values = []
-    for column in column_names:
-        for key, value in column_mapping.items():
-            if value == column:
-                row_values.append(str(user_data[key]))
-                break
-    assert last_row_values[:6] == row_values, "Inserted row doesn't match original data"
-    web_tables_page.delete_row(len(not_empty_rows))
-    a = len(not_empty_rows)
-    b = web_tables_page.get_not_empty_rows()
-    assert len(web_tables_page.get_not_empty_rows()) == len(not_empty_rows) - 1, "Amount of rows didn't change"
-    assert [str(value) for value in user_data.values()] not in web_tables_page.get_not_empty_rows(), "Row wasn't deleted"
-    web_tables_page.go_to_home()
+
+    web_tables_page.click_submit_button()
+    assert user_data in web_tables_page.get_users(), "Inserted user is not in the table"
+
+    web_tables_page.delete_row(len(web_tables_page.get_users()))
+
+    assert user_data not in web_tables_page.get_users(), "User was not deleted"
+
+    header.go_to_home()
     assert main_page.is_displayed(), "Main page is not displayed"

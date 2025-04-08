@@ -1,9 +1,14 @@
 {
     "base_url": "https://demoqa.com/",
     "browser": "chrome",
-    "browser_options": [
-        "--lang=en-US",
-        "--disable-software-rasterizer"
-    ],
+    "browser_options": {
+        "chrome": [
+            "--incognito"
+        ],
+        "firefox": [
+            "-private"
+        ],
+        "maximize": true
+    },
     "waiting_time": 5
 }

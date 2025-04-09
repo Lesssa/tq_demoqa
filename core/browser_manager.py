@@ -4,49 +4,48 @@ from config.config_manager import ConfigManager
 from config.logger import Logger
 from core.driver import Driver
 from selenium.webdriver.common.alert import Alert
-logger = Logger.get_logger()
 
 
 class BrowserManager:
     @staticmethod
     def switch_to_alert():
-        logger.info('Switching to an alert')
+        Logger.info('Switching to an alert')
         return Alert(Driver().driver)
 
     @staticmethod
     def accept_alert():
-        logger.info('Switching to an alert and accepting it')
+        Logger.info('Switching to an alert and accepting it')
         BrowserManager.switch_to_alert().accept()
 
     @staticmethod
     def dismiss_alert():
-        logger.info('Switching to an alert and dismissing it')
+        Logger.info('Switching to an alert and dismissing it')
         BrowserManager.switch_to_alert().dismiss()
 
     @staticmethod
     def get_alert_text():
-        logger.info('Switching to an alert and getting text of it')
+        Logger.info('Switching to an alert and getting text of it')
         return BrowserManager.switch_to_alert().text
 
     @staticmethod
     def send_keys_alert(text):
-        logger.info('Switching to an alert and sending keys to it')
+        Logger.info('Switching to an alert and sending keys to it')
         return BrowserManager.switch_to_alert().send_keys(text)
 
     @staticmethod
     def get_old_tabs():
-        logger.info('Getting a set of browser tabs')
+        Logger.info('Getting a set of browser tabs')
         return set(Driver().driver.window_handles)
 
     @staticmethod
     def get_new_tab_id(old_tabs):
-        logger.info('Getting an ID of a new browser tab')
+        Logger.info('Getting an ID of a new browser tab')
         WebDriverWait(Driver().driver, ConfigManager.get('waiting_time')).until(lambda d: len(d.window_handles) > len(old_tabs))
         return (set(Driver().driver.window_handles) - old_tabs).pop()
 
     @staticmethod
     def switch_to_tab(index):
-        logger.info('Switching to a browser tab by the index')
+        Logger.info('Switching to a browser tab by the index')
         window_handles = Driver().driver.window_handles
         for handle in window_handles:
             if handle == index:
@@ -55,11 +54,11 @@ class BrowserManager:
 
     @staticmethod
     def close_current_tab():
-        logger.info('Closing current browser tab')
+        Logger.info('Closing current browser tab')
         Driver().driver.close()
         Driver().driver.switch_to.window(Driver().driver.window_handles[-1])
 
     @staticmethod
     def get_current_url():
-        logger.info('Getting current url')
+        Logger.info('Getting current url')
         return Driver().driver.current_url

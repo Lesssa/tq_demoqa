@@ -20,17 +20,12 @@ def test_tables(user_data):
     assert left_menu.is_displayed(), "Left menu is not displayed"
     left_menu.go_to_web_tables()
 
-    assert web_tables_page.is_displayed(), "Web tables page s not displayed"
-    web_tables_page.get_add_button().click()
-    web_tables_page.wait_reg_form_displayed()
+    assert web_tables_page.is_displayed(), "Web tables page is not displayed"
 
-    for field, value in user_data.dict(by_alias=True).items():
-        web_tables_page.send_keys(field, str(value))
-
-    web_tables_page.click_submit_button()
+    web_tables_page.add_user(user_data)
     assert user_data in web_tables_page.get_users(), "Inserted user is not in the table"
 
-    web_tables_page.delete_row(len(web_tables_page.get_users()))
+    web_tables_page.delete_row_by_user(user_data)
 
     assert user_data not in web_tables_page.get_users(), "User was not deleted"
 

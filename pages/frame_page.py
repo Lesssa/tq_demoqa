@@ -5,28 +5,26 @@ from elements.base_element import BaseElement
 from elements.label import Label
 from pages.base_form import BaseForm
 from pages.frame import Frame
-logger = Logger.get_logger()
+from pages.sample_page import SamplePage
 
 
-# todo after changing to baseform there's some errors
 class FramePage(BaseForm):
-    __upper_frame = (By.XPATH, '//*[@id="frame1"]')
-    __lower_frame = (By.XPATH, '//*[@id="frame2"]')
-    __frame_text = Label((By.XPATH, '//*[@id="sampleHeading"]'), 'Frame text')
+    __frames_title = Label((By.XPATH, '//*[contains(@class, "text-center") and contains(text(), "Frames")]'), "Frames title")
+    __upper_frame = Label((By.XPATH, '//*[@id="frame1"]'), 'Upper frame')
+    __lower_frame = Label((By.XPATH, '//*[@id="frame2"]'), 'Lower frame')
 
     def __init__(self):
-        super().__init__(self.__upper_frame, "Frames Page")
+        super().__init__(self.__frames_title, "Frames Page")
+        self.sample_frame = SamplePage()
 
     def get_upper_frame_text(self):
-        logger.info('Getting text from upper frame')
-        self.switch_to_frame(self.__upper_frame)
-        text = self.__frame_text.get_text()
-        self.switch_to_default_content()
+        Logger.info('Getting text from upper frame')
+        with Frame(self.__upper_frame):
+            text = self.sample_frame.get_text()
         return text
 
     def get_lower_frame_text(self):
-        logger.info('Getting text from lower frame')
-        self.switch_to_frame(self.__lower_frame)
-        text = self.__frame_text.get_text()
-        self.switch_to_default_content()
+        Logger.info('Getting text from lower frame')
+        with Frame(self.__lower_frame):
+            text = self.sample_frame.get_text()
         return text

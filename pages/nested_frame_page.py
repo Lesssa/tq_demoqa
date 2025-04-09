@@ -1,34 +1,33 @@
 from selenium.webdriver.common.by import By
 
 from config.logger import Logger
-from elements.base_element import BaseElement
 from elements.label import Label
+from pages.base_form import BaseForm
+from pages.child_frame import ChildFrame
 from pages.frame import Frame
-logger = Logger.get_logger()
+from pages.parent_frame import ParentFrame
 
 
-# todo locators are not unique
-# todo parent shouldn't be frame, it's a page
-class NestedFramePage(Frame):
-    __parent_frame = (By.XPATH, '//iframe[@id="frame1"]')
-    __child_frame = (By.XPATH, "//iframe")
-    __parent_text = Label((By.XPATH, "//body[iframe]"), 'Parent text')
-    __child_text = Label((By.XPATH, "//p"), 'Child Text')
+class NestedFramePage(BaseForm):
+    __nested_frames_title = Label((By.XPATH, '//*[contains(@class, "text-center") and contains(text(), "Nested Frames")]'), "Nested frames title")
+    __parent_frame = Label((By.XPATH, '//iframe[@id="frame1"]'), 'Parent frame')
+    __child_frame = Label((By.XPATH, '//iframe[contains(@srcdoc, "Child Iframe")]'), 'Child frame')
 
     def __init__(self):
-        super().__init__(self.__parent_frame, "Nested Frames Page")
+        super().__init__(self.__nested_frames_title, "Nested Frames Page")
+        self.parent_frame = ParentFrame()
+        self.child_frame = ChildFrame()
 
     def get_parent_text(self):
-        logger.info('Getting parent frame text')
-        self.switch_to_frame(self.__parent_frame)
-        text = self.__parent_text.get_text()
-        self.switch_to_default_content()
-        return text
+        Logger.info('Getting parent frame text')
+        with Frame(self.__parent_frame):
+            parent_text = self.parent_frame.get_text()
+        return parent_text
 
     def get_child_text(self):
-        logger.info('Getting child frame text')
-        self.switch_to_frame(self.__parent_frame)
-        self.switch_to_frame(self.__child_frame)
-        text = self.__child_text.get_text()
-        self.switch_to_default_content()
-        return text
+        Logger.info('Getting child frame text')
+        with Frame(self.__parent_frame):
+            with Frame(self.__child_frame):
+                child_text = self.child_frame.get_text()
+
+        return child_text

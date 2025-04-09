@@ -1,16 +1,16 @@
 from config.logger import Logger
 from core.driver import Driver
-from pages.base_form import BaseForm
-logger = Logger.get_logger()
 
 
-class Frame(BaseForm):
-    @staticmethod
-    def switch_to_frame(locator):
-        logger.info('Switching to a frame')
-        Driver().driver.switch_to.frame(Driver().driver.find_element(*locator))
+class Frame:
+    def __init__(self, frame_locator):
+        self.__frame_locator = frame_locator
 
-    @staticmethod
-    def switch_to_default_content():
-        logger.info('Switching to default container')
+    def __enter__(self):
+        Logger.info("Switching to frame")
+        Driver().driver.switch_to.frame(self.__frame_locator.find())
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        Logger.info("Exiting frame, switching back to the parent context")
         Driver().driver.switch_to.default_content()
+
